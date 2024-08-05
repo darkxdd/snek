@@ -43,3 +43,4 @@ jobs:
             prerelease: false
           });
           core.setOutput('upload_url', release.upload_url);
+          
