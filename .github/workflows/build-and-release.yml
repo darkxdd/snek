@@ -30,8 +30,8 @@ jobs:
           const { data: release } = await github.repos.createRelease({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            tag_name: 'v1.0.0', // Change this to your version tag
-            name: 'Release v1.0.0', // Change this to your release name
+            tag_name: 'v1.0.0', # Change this to your version tag
+            name: 'Release v1.0.0', # Change this to your release name
             draft: false,
             prerelease: false
           });
