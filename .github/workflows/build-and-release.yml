@@ -34,6 +34,24 @@ jobs:
     - name: Authenticate GitHub CLI
       run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
 
+    - name: Get Latest Release Version
+      id: get_latest_release
+      run: |
+        latest_release=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
+        echo "Latest release: $latest_release"
+        if [ -z "$latest_release" ]; then
+          echo "No releases found. Starting with v0.0.0"
+          echo "version=0.0.0" >> $GITHUB_ENV
+        else
+          # Extract the version number and increment it
+          version_number=$(echo "$latest_release" | sed 's/^v//')
+          IFS='.' read -r major minor patch <<< "$version_number"
+          patch=$((patch + 1))
+          new_version="v${major}.${minor}.${patch}"
+          echo "New version: $new_version"
+          echo "version=$new_version" >> $GITHUB_ENV
+        fi
+
     - name: Create Release
       run: |
-        gh release create v1.0.0 build/snake_game --title "Release v1.0.0" --notes "Release notes for v1.0.0"
+        gh release create ${{ env.version }} build/snake_game --title "Release ${{ env.version }}" --notes "Release notes for ${{ env.version }}"
