@@ -28,28 +28,11 @@ jobs:
         name: snake_game_artifact
         path: build/snake_game  # Adjust this path to the compiled binary
 
+    - name: Install GitHub CLI
+      run: sudo apt-get install gh
+
     - name: Create Release
       id: create_release
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { data: release } = await github.rest.repos.createRelease({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            tag_name: 'v1.0.0',  // Change this to your version tag
-            name: 'Release v1.0.0',  // Change this to your release name
-            draft: false,
-            prerelease: false
-          });
-          core.setOutput('upload_url', release.upload_url);
-
-    - name: Upload Release Asset
-      uses: actions/github-script@v6
-      env:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/snake_game
-        asset_name: snake_game
-        asset_content_type: application/octet-stream
+      run: |
+        gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
+        gh release create v1.0.0 build/snake_game --title "Release v1.0.0" --notes "Release notes for v1.0.0"
