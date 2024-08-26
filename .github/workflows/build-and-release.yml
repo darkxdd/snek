@@ -26,7 +26,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: snake_game_artifact
-        path: build/snake_game  # Adjust this path to the compiled binary
+        path: build/snek  
 
     - name: Install GitHub CLI
       run: sudo apt-get install gh
@@ -54,4 +54,4 @@ jobs:
 
     - name: Create Release
       run: |
-        gh release create ${{ env.version }} build/snake_game --title "Release ${{ env.version }}" --notes "Release notes for ${{ env.version }}"
+        gh release create ${{ env.version }} build/snek --title "Release ${{ env.version }}" --notes "Release notes for ${{ env.version }}"
